@@ -1,0 +1,35 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: supermanservice
+spec:
+  selector:
+    app: supermanservice
+  ports:
+    - protocol: TCP
+      port: 8080
+      nodePort: 30083
+  type: LoadBalancer
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: supermanservice
+spec:
+  selector:
+    matchLabels:
+      app: supermanservice
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: supermanservice
+    spec:
+      containers:
+        - name: supermanservice
+          image: subhankarde/supermanservice:0.0.5-SNAPSHOT
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
